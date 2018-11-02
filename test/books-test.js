@@ -88,5 +88,50 @@ describe('Books', function () {
                     });
             });
         });
+        //find all books whose likes are greater than or equal to the input number
+        describe('GET /books/like=:like', () => {
+            it('should return all books whose likes are greater than or equal to 79', function(done) {
+                chai.request(server)
+                    .get('/books/like=79')
+                    .end(function(err, res) {
+                        expect(res).to.have.status(200);
+                        expect(res.body.length).to.equal(2);
+                        let result = _.map(res.body, (book) => {
+                            return { name: book.name,
+                                like: book.like }
+                        });
+                        expect(result).to.include( { name: 'you', like: 5780 } );
+                        expect(result).to.include( { name: 'her', like: 79 } );
+                        done();
+                    });
+            });
+            it('should return a message that there is no book has such a number of likes', function(done) {
+                chai.request(server)
+                    .get('/books/like=10000')
+                    .end(function(err, res) {
+                        expect(res).to.have.status(200);
+                        expect(res.body).to.have.property('message').equal( 'Sorry, cannot find any book has higher likes');
+                        done();
+                    });
+            });
+            it('should return an error message for input number is not integer', function(done) {
+                chai.request(server)
+                    .get('/books/like=2.5')
+                    .end(function(err, res) {
+                        expect(res).to.have.status(200);
+                        expect(res.body).to.have.property('message').equal( 'Input number only allows integers and must not be less than 0');
+                        done();
+                    });
+            });
+            it('should return an error message for input number is less than 0', function(done) {
+                chai.request(server)
+                    .get('/books/like=-9')
+                    .end(function(err, res) {
+                        expect(res).to.have.status(200);
+                        expect(res.body).to.have.property('message').equal( 'Input number only allows integers and must not be less than 0');
+                        done();
+                    });
+            });
+        });
     });
 });
