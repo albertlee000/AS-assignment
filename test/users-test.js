@@ -57,3 +57,38 @@ describe('Users', function (){
         });
     });
 });
+describe('Users', function () {
+    describe('DELETEs', function () {
+        describe('DELETE /users/acc=:account', () => {
+            it('should return a succcessful message and the user would be deleted by account', function(done) {
+                chai.request(server)
+                    .delete('/users/acc=albert')
+                    .end(function(err, res) {
+                        expect(res).to.have.status(200);
+                        expect(res.body).to.have.property('message').equal('User delete successully!' );
+                        done();
+                    });
+            });
+            after(function  (done) {
+                chai.request(server)
+                    .get('/users/acc=albert')
+                    .end(function(err, res) {
+                        let result = _.map(res.body, (user) => {
+                            return { account:user.account };
+                        }  );
+                        expect(result).to.not.include( { account:'albert'  } );
+                        done();
+                    });
+            });
+            it('should return a failed message for deleting user failed', function(done) {
+                chai.request(server)
+                    .delete('/users/acc=albert')
+                    .end(function(err, res) {
+                        expect(res).to.have.status(200);
+                        expect(res.body).to.have.property('message').equal('User delete failed!' );
+                        done();
+                    });
+            });
+        });
+    });
+});
