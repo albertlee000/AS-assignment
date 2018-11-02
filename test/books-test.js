@@ -270,3 +270,40 @@ describe('Books', function () {
         });
     });
 });
+describe('Books', function () {
+    describe('DELETEs', function () {
+        //delete a book by name
+        describe('DELETE /books/name=:name', () => {
+            it('should return a message that book deleted successfully', function(done) {
+                chai.request(server)
+                    .delete('/books/name=math')
+                    .end(function(err, res) {
+                        expect(res).to.have.status(200);
+                        expect(res.body).to.have.property('message').equal('Book [math] delete successully!' );
+                        done();
+                    });
+            });
+            after(function  (done) {
+                chai.request(server)
+                    .get('/books/name=math')
+                    .end(function(err, res) {
+                        let result = _.map(res.body, (book) => {
+                            return { name:book.name };
+                        }  );
+                        expect(result).to.not.include( { name:'math'  } );
+                        done();
+                    });
+            });
+            it('should return a failed message that delete book failed for the book does not exist', function(done) {
+                chai.request(server)
+                    .delete('/books/name=math')
+                    .end(function(err, res) {
+                        expect(res).to.have.status(200);
+                        expect(res.body).to.have.property('message').equal('Book [math] delete failed!' );
+                        done();
+                    });
+            });
+
+        });
+    });
+});
