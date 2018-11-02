@@ -221,3 +221,52 @@ describe('Books', function (){
         });
     });
 });
+describe('Books', function () {
+    describe('POSTs', function () {
+        describe('POST /books/addBook', function () {
+            it('should return a message that add book successfully and update database', function (done) {
+                let book = {
+                    bookname: 'math',
+                    author: 'ki'
+                };
+                chai.request(server)
+                    .post('/books/addBook')
+                    .send(book)
+                    .end(function (err, res) {
+                        expect(res).to.have.status(200);
+                        expect(res.body).to.have.property('message').equal('Book Successfully Added!');
+                        done();
+                    });
+            })
+            after(function (done) {
+                chai.request(server)
+                    .get('/books/name=math')
+                    .end(function (err, res) {
+                        let result = _.map(res.body, (book) => {
+                            return {
+                                name: book.name,
+                                author: book.author
+                            };
+                        });
+                        expect(res).to.have.status(200);
+                        expect(result).to.include({name: 'math', author: 'ki'});
+                        done();
+                    });
+            });
+            it('should return a failed message that create book failed for the book exists', function (done) {
+                let book = {
+                    name: 'math',
+                    author: 'ki'
+                };
+                chai.request(server)
+                    .post('/books/addBook')
+                    .send(book)
+                    .end(function (err, res) {
+                        expect(res).to.have.status(200);
+                        expect(res.body).to.have.property('message').equal('Book NOT Added!');
+                        done();
+                    });
+            });
+        });
+    });
+});
