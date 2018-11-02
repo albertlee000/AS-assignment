@@ -80,46 +80,47 @@ describe('Users', function () {
         });
     });
 });
-describe('Users', function (){
-    describe('PUTs', function (){
+describe('Users', function () {
+    describe('PUTs', function () {
         describe('PUT /users/like=:id', function () {
-            it('should return a message that user liked the book and the book\'s like number increased ', function(done) {
-                let bookname = {bookname:'you'};
+            it('should return a message that user liked the book and the book\'s like number increased ', function (done) {
+                let bookname = {bookname: 'you'};
                 chai.request(server)
                     .put('/users/like=5bd0d4f056a059283002a29c')
                     .send(bookname)
-                    .end(function(err, res) {
+                    .end(function (err, res) {
                         expect(res).to.have.status(200);
-                        expect(res.body).to.have.property('message').equal('You liked this book' );
+                        expect(res.body).to.have.property('message').equal('You liked this book');
                         done();
                     });
             });
 
-            it('should return a message that liked failed for this user has liked ', function(done) {
-                let bookname = {bookname:'you'};
+            it('should return a message that liked failed for this user has liked ', function (done) {
+                let bookname = {bookname: 'you'};
                 chai.request(server)
                     .put('/users/like=5bd0d4f056a059283002a29c')
                     .send(bookname)
-                    .end(function(err, res) {
-                        expect(res.body).to.have.property('message').equal('You have liked this book, cannot like again...' );
+                    .end(function (err, res) {
+                        expect(res.body).to.have.property('message').equal('You have liked this book, cannot like again...');
                         done();
                     });
             });
         });
 
         describe('PUT /users/unlike=:id', function () {
-            it('should return a message that user unlikes the book and the book\'s like decreased ', function(done) {
-                let bookname = {bookname:'you'};
+            it('should return a message that user unlikes the book and the book\'s like decreased ', function (done) {
+                let bookname = {bookname: 'you'};
                 chai.request(server)
                     .put('/users/unlike=5bd0d4f056a059283002a29c')
                     .send(bookname)
-                    .end(function(err, res) {
+
+                    .end(function (err, res) {
                         expect(res).to.have.status(200);
                         expect(res.body).to.have.property('message').equal('You unliked this book');
                         done();
                     });
             });
-            after(function  (done) {
+            after(function (done) {
                 chai.request(server)
                     .get('/books/id=5bd0d747a0fa610ec0cc092a')
                     .end(function(err, res) {
@@ -140,39 +141,136 @@ describe('Users', function (){
                         done();
                     });
             });
-        });
 
+        });
         describe('PUT /users/recommende=:id', function () {
-            it('should return a message and update database that user recommended a book and added a review to the book', function(done) {
+            it('should return a message and update database that user recommended a book and added a review to the book', function (done) {
                 let recommendation = {
-                    bookname: 'me' ,
+                    bookname: 'me',
                     id: '5bd0d75aa0fa610ec0cc092b',
                     review: 'what a book!!!'
                 };
                 chai.request(server)
                     .put('/users/recommende=5bd0d4fa56a059283002a29d')
                     .send(recommendation)
-                    .end(function(err, res) {
+                    .end(function (err, res) {
                         expect(res).to.have.status(200);
                         expect(res.body).to.have.property('message').equal('You recommended [me]');
                         done();
                     });
             });
-            it('should return a message that recommende failed', function(done) {
+            it('should return a message that recommende failed', function (done) {
                 let recommendation = {
-                    bookname: 'me' ,
+                    bookname: 'me',
                     id: '5bce51756436e42a00965e4e',
                     review: 'an amazing book'
                 };
                 chai.request(server)
                     .put('/users/recommende=11255')
                     .send(recommendation)
-                    .end(function(err, res) {
+                    .end(function (err, res) {
                         expect(res).to.have.status(200);
                         expect(res.body).to.have.property('message').equal('Sorry! Please try it again!');
                         done();
                     });
+                it('should return a failed message for deleting user failed', function (done) {
+                    chai.request(server)
+                        .delete('/users/acc=albert')
+                        .end(function (err, res) {
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.have.property('message').equal('User delete failed!');
+                            done();
+                        });
+                });
             });
+        });
+    });
+});
+describe('Users', function (){
+    describe('POSTs', function (){
+        describe('POST /users/addUser', function () {
+            it('should return confirmation message that add successfully and update database ', function(done) {
+                let user = {
+                    account: 'albert',
+                    psw: '123456',
+                    email: 'aaa@qq.com',
+                };
+                chai.request(server)
+                    .post('/users/addUser')
+                    .send(user)
+                    .end(function(err, res) {
+                        expect(res).to.have.status(200);
+                        expect(res.body).to.have.property('message').equal('User created successfully!' );
+                        done();
+                    });
+            });
+            after(function (done) {
+                chai.request(server)
+                    .get('/users/acc=albert')
+                    .end(function(err, res) {
+                        let result = _.map(res.body, (user) => {
+                            return {
+                                account: user.account,
+                                psw: user.psw,
+                                email: user.email,
+                            };
+                        });
+                        expect(result).to.include( { account: 'albert', psw: '123456',email:'aaa@qq.com'  } );
+                        done();
+                    });
+            });
+            it('should return a failed message for creating user failed', function(done) {
+                let user = {
+                    account: 'albert',
+                    psw: '123456',
+                    email: 'aaa@qq.com',
+                };
+                chai.request(server)
+                    .post('/users/addUser')
+                    .send(user)
+                    .end(function(err, res) {
+                        expect(res).to.have.status(200);
+                        expect(res.body).to.have.property('message').equal('User created failed...' );
+                        done();
+                    });
+            });
+        });
+    });
+});
+
+describe('Users', function () {
+    describe('DELETEs', function () {
+        describe('DELETE /users/acc=:account', () => {
+            it('should return a succcessful message and the user would be deleted by account', function(done) {
+                chai.request(server)
+                    .delete('/users/acc=albert')
+                    .end(function(err, res) {
+                        expect(res).to.have.status(200);
+                        expect(res.body).to.have.property('message').equal('User delete successully!' );
+                        done();
+                    });
+            });
+            after(function  (done) {
+                chai.request(server)
+                    .get('/users/acc=albert')
+                    .end(function (err, res) {
+                        let result = _.map(res.body, (user) => {
+                            return {account: user.account};
+                        });
+                        expect(result).to.not.include({account: 'albert'});
+                        done();
+                    });
+            });
+            it('should return a failed message for deleting user failed', function(done) {
+                chai.request(server)
+                    .delete('/users/acc=albert')
+                    .end(function(err, res) {
+                        expect(res).to.have.status(200);
+                        expect(res.body).to.have.property('message').equal('User delete failed!' );
+                        done();
+                    });
+            });
+
         });
     });
 });
