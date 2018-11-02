@@ -76,5 +76,37 @@ describe('Users', function (){
                     });
             });
         });
+        describe('PUT /users/recommende=:id', function () {
+            it('should return a message and update database that user recommended a book and added a review to the book', function(done) {
+                let recommendation = {
+                    bookname: 'me' ,
+                    id: '5bd0d75aa0fa610ec0cc092b',
+                    review: 'what a book!!!'
+                };
+                chai.request(server)
+                    .put('/users/recommende=5bd0d4fa56a059283002a29d')
+                    .send(recommendation)
+                    .end(function(err, res) {
+                        expect(res).to.have.status(200);
+                        expect(res.body).to.have.property('message').equal('You recommended [me]');
+                        done();
+                    });
+            });
+            it('should return a message that recommende failed', function(done) {
+                let recommendation = {
+                    bookname: 'me' ,
+                    id: '5bce51756436e42a00965e4e',
+                    review: 'an amazing book'
+                };
+                chai.request(server)
+                    .put('/users/recommende=11255')
+                    .send(recommendation)
+                    .end(function(err, res) {
+                        expect(res).to.have.status(200);
+                        expect(res.body).to.have.property('message').equal('Sorry! Please try it again!');
+                        done();
+                    });
+            });
+        });
     });
 });
