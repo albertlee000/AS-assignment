@@ -1,4 +1,4 @@
-let chai = require('chai');
+    let chai = require('chai');
 let chaiHttp = require('chai-http');
 let server = require('../bin/www');
 let expect = chai.expect;
@@ -16,7 +16,7 @@ describe('Books', function () {
                     .end(function (err, res) {
                         expect(res).to.have.status(200);
                         expect(res.body).to.be.a('array');
-                        expect(res.body.length).to.equal(4);
+                        expect(res.body.length).to.equal(5);
                         done();
                     });
             });
@@ -90,18 +90,19 @@ describe('Books', function () {
         });
         //find all books whose likes are greater than or equal to the input number
         describe('GET /books/like=:like', () => {
-            it('should return all books whose likes are greater than or equal to 79', function(done) {
+            it('should return all books whose likes are greater than or equal to 12', function(done) {
                 chai.request(server)
-                    .get('/books/like=79')
+                    .get('/books/like=12')
                     .end(function(err, res) {
                         expect(res).to.have.status(200);
-                        expect(res.body.length).to.equal(2);
+                        expect(res.body.length).to.equal(3);
                         let result = _.map(res.body, (book) => {
                             return { name: book.name,
-                                like: book.like }
+                                like: book.like}
                         });
                         expect(result).to.include( { name: 'you', like: 5780 } );
-                        expect(result).to.include( { name: 'her', like: 79 } );
+                        expect(result).to.include( { name: 'her', like: 80 } );
+                        expect(result).to.include( { name: 'them', like: 12 } );
                         done();
                     });
             });
