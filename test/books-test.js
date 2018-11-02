@@ -44,6 +44,37 @@ describe('Books', function (){
                     });
             });
         });
-
+        //completely clear all reviews of a book
+        describe('PUT /books/e=:id', function () {
+            it('should return a successful message that clear all reviews of the book', function(done) {
+                chai.request(server)
+                    .put('/books/clearReview=5bdb9eb0fb6fc074abb4df49')
+                    .end(function(err, res) {
+                        expect(res).to.have.status(200);
+                        expect(res.body).to.have.property('message').equal('Reviews clear successfully!!');
+                        done();
+                    });
+            });
+            after(function  (done) {
+                chai.request(server)
+                    .get('/books/id=5bdb9eb0fb6fc074abb4df49')
+                    .end(function(err, res) {
+                        let result = _.map(res.body, (book) => {
+                            return { review:book.review };
+                        }  );
+                        expect(result).to.include({review:[null]});
+                        done();
+                    });
+            });
+            it('should return a failed message that clear failed', function(done) {
+                chai.request(server)
+                    .put('/books/clearReview=vds41234fv221scdf')
+                    .end(function(err, res) {
+                        expect(res).to.have.status(200);
+                        expect(res.body).to.have.property('message').equal('Reviews clear failed...');
+                        done();
+                    });
+            });
+        });
     });
 });
