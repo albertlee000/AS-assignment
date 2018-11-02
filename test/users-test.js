@@ -8,7 +8,7 @@ chai.use(require('chai-things'));
 chai.use(chaiHttp);
 let _ = require('lodash' );
 describe('Users', function () {
-    describe('GET', function () {
+    describe('GETs', function () {
         describe('GET /users/id=:id', () => {
             it('should return an user by id', function (done) {
                 chai.request(server)
@@ -60,6 +60,18 @@ describe('Users', function () {
                     .end(function(err, res) {
                         expect(res).to.have.status(200);
                         expect(res.body).to.have.property('Message').equal('Sorry! User Not Found !');
+                        done();
+                    });
+            });
+        });
+        describe('GET /users/rank', () => {
+            it('should return all books in descending order by likes', function(done) {
+                chai.request(server)
+                    .get('/users/rank')
+                    .end(function(err, res) {
+                        expect(res).to.have.status(200);
+                        expect(res.body[0].name).to.include( 'you');
+                        expect(res.body[1].name).to.include('her');
                         done();
                     });
             });
