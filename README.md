@@ -3,8 +3,9 @@
 Name:Zonghao Li
 
 ## Overview.
-        Users.js can add and delete users, get user information, recommend books, like favorite books and unlike it, filter and arrange books according to likes. 
-        Books.js can add and delete books, get information about books, give a summary to writing, clear all reviews on a book, and so on.
+Users.js can add and delete users, get user information, recommend books, like favorite books and unlike it, filter and arrange books according to likes. 
+
+Books.js can add and delete books, get information about books, give a summary to writing, clear all reviews on a book, and so on.
 
 ## API endpoints.
 + GET /books - get all books.
@@ -32,7 +33,8 @@ Name:Zonghao Li
 
 
 ## Data storage.
-        User Schema:
+User Schema:
+        
         {
            account:{type:String,required:true,unique:true},
            psw:{type:String,required:true},
@@ -48,7 +50,8 @@ Name:Zonghao Li
                 }],
          }
          
-        Book Schema:
+Book Schema:
+
         {
                 name: {type:String,required:true},
                 author:{type:String,required:true},
@@ -62,7 +65,6 @@ Name:Zonghao Li
           }
 
 ## Sample Test execution.
-
 // books-test.js testing
 D:\lzh\AS-assignment>mocha test/books-test.js
 
@@ -202,8 +204,6 @@ GET /users/acc=albert 200 85.895 ms - 37
 
 
   15 passing (3s)
-
-
 [ Markdown Tip: By indenting the above listing, GitHub will display it in a 'box' and preserve any formatting.]
 
 ## Extra features.
