@@ -65,7 +65,8 @@ Book Schema:
           }
 
 ## Sample Test execution.
-// books-test.js testing
+books-test.js testing：
+
 D:\lzh\AS-assignment>mocha test/books-test.js
 
 
@@ -138,7 +139,7 @@ GET /books/name=math 200 58.951 ms - 49
 
   18 passing (2s)
 
- //users-test.js testing
+users-test.js testing：
  D:\lzh\AS-assignment>mocha test/users-test.js
 
 
