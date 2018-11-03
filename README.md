@@ -3,8 +3,8 @@
 Name:Zonghao Li
 
 ## Overview.
-Users.js can add and delete users, get user information, recommend books, like favorite books and unlike it, filter and arrange books according to likes. 
-Books.js can add and delete books, get information about books, give a summary to writing, clear all reviews on a book, and so on.
+        Users.js can add and delete users, get user information, recommend books, like favorite books and unlike it, filter and arrange books according to likes. 
+        Books.js can add and delete books, get information about books, give a summary to writing, clear all reviews on a book, and so on.
 
 ## API endpoints.
 + GET /books - get all books.
@@ -32,34 +32,33 @@ Books.js can add and delete books, get information about books, give a summary t
 
 
 ## Data storage.
-User Schema:
-{
-        account:{type:String,required:true,unique:true},
-        psw:{type:String,required:true},
-        email:String,
-        recommendation:[{
-            type:mongoose.Schema.Types.ObjectId,
-            ref:'Book'
-
-        }],
-        like:[{
-            type:String,
-            default:null,
-            _id:false
-        }],
-}
-Book Schema:
-{
-        name: {type:String,required:true},
-        author:{type:String,required:true},
-        summary:{type:String,default:null},
-        like: {type: Number, default: 0},
-        review:[{
-            content:{type:String,default: null},
-            reviewer:{type:String,default:null},
-            _id:false
-        }]
-}
+        User Schema:
+        {
+           account:{type:String,required:true,unique:true},
+           psw:{type:String,required:true},
+           email:String,
+          recommendation:[{
+              type:mongoose.Schema.Types.ObjectId,
+                    ref:'Book'
+                }],
+                like:[{
+                   type:String,
+                   default:null,
+                   _id:false
+                }],
+         }
+        Book Schema:
+        {
+                name: {type:String,required:true},
+                author:{type:String,required:true},
+                summary:{type:String,default:null},
+                like: {type: Number, default: 0},
+                review:[{
+                 content:{type:String,default: null},
+                reviewer:{type:String,default:null},
+                 _id:false
+                }]
+          }
 
 ## Sample Test execution.
 
