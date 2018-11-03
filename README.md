@@ -65,7 +65,7 @@ Book Schema:
           }
 
 ## Sample Test execution.
-D:\lzh\AS-assignment>mocha test/books-test.js
+
 books-test.js testing：    
     
     (node:11000) DeprecationWarning: current URL string parser is deprecated, and will be removed in a future version. To use the new parser, pass option { useNewUrlParser: true } to MongoC
